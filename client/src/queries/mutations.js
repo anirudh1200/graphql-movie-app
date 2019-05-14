@@ -1,8 +1,8 @@
 import { gql } from 'apollo-boost';
 
 export const addMovieMutation = gql`
-	mutation($name: String!, $genre: String!, $year: String!,$directorId: [String]!){
-		addMovie(name: $name, year: $year,genre: $genre, directorId: $directorId){
+	mutation($name: String!, $genres: [String]!, $year: String!, $directorId: String!, $actorIds: [String]!){
+		addMovie(name: $name, year: $year, genres: $genres, directorId: $directorId, actorIds: $actorIds){
 			name
 			id
 		}

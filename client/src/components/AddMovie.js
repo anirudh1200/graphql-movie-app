@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
 import { graphql, compose } from 'react-apollo';
-import { getDirectorsQuery, getMoviesQuery } from '../queries/queries';
+import { getDirectorsAndActorsQuery, getMoviesQuery } from '../queries/queries';
 import { addMovieMutation } from '../queries/mutations';
 
 class AddMovie extends Component {
 
 	state = {
 		name: '',
-		genre: '',
+		genres: [],
 		year: '',
-		directorId: []
+		directorId: '',
+		actorIds: [],
+		actorNo: 1,
+		genreNo: 1,
 	}
 
 	displayDirectors = () => {
-		let data = this.props.getDirectorsQuery;
+		let data = this.props.getDirectorsAndActorsQuery;
 		if (data.loading) {
 			return (<option disabled>Loading...</option>)
 		} else {
@@ -23,21 +26,82 @@ class AddMovie extends Component {
 		}
 	}
 
+	displayActors = () => {
+		let data = this.props.getDirectorsAndActorsQuery;
+		if (data.loading) {
+			return (<option disabled>Loading...</option>)
+		} else {
+			return data.actors.map(actor => {
+				return (<option key={actor.id} value={actor.id}>{actor.name}</option>);
+			})
+		}
+	}
+
+	displayGenre = () => {
+		let data = ['Action', 'Adventure', 'Comedy', 'Crime', 'Drama', 'Fantasy', 'Historical', 'Horror', 'Mystery', 'Thriller', 'Romance', 'Science fiction'];
+		return data.map((genre, i) => {
+			return (<option key={i} value={genre}>{genre}</option>);
+		})
+	}
+
 	submitForm = e => {
 		e.preventDefault();
 		console.log(this.state);
 		this.props.addMovieMutation({
 			variables: {
 				name: this.state.name,
-				genre: this.state.genre,
+				genres: this.state.genres,
 				year: this.state.year,
-				directorId: this.state.directorId
+				directorId: this.state.directorId,
+				actorIds: this.state.actorIds,
 			},
 			refetchQueries: [{ query: getMoviesQuery }]
 		});
 	}
 
 	render() {
+		let actorInputs = [];
+		for (let i = 0; i < this.state.actorNo; i++) {
+			actorInputs.push(
+				(
+					<select
+						key={i}
+						onChange={e => {
+							e.persist();
+							this.setState(prevState => {
+								let newActorList = prevState.actorIds;
+								newActorList.push(e.target.value);
+								return ({ actorIds: newActorList });
+							})
+						}}
+					>
+						<option>Actors</option>
+						{this.displayActors()}
+					</select>
+				)
+			)
+		}
+		let genreInputs = [];
+		for (let i = 0; i < this.state.genreNo; i++) {
+			genreInputs.push(
+				(
+					<select
+						key={i}
+						onChange={e => {
+							e.persist();
+							this.setState(prevState => {
+								let newGenreList = prevState.genres;
+								newGenreList.push(e.target.value);
+								return ({ genres: newGenreList });
+							})
+						}}
+					>
+						<option>Genre</option>
+						{this.displayGenre()}
+					</select>
+				)
+			)
+		}
 		return (
 			<form id="add-movie" onSubmit={this.submitForm}>
 				<div className="field">
@@ -45,13 +109,6 @@ class AddMovie extends Component {
 					<input
 						type="text"
 						onChange={e => this.setState({ name: e.target.value })}
-					/>
-				</div>
-				<div className="field">
-					<label>Genre: </label>
-					<input
-						type="text"
-						onChange={e => this.setState({ genre: e.target.value })}
 					/>
 				</div>
 				<div className="field">
@@ -64,28 +121,34 @@ class AddMovie extends Component {
 					/>
 				</div>
 				<div className="field">
+					<label>Genre: </label>
+					{genreInputs}
+					<span onClick={e => this.setState({ genreNo: this.state.genreNo + 1 })}>+</span>
+				</div>
+				<div className="field">
 					<label>Director: </label>
 					<select
 						onChange={e => {
 							e.persist();
-							this.setState(prevState => {
-								let { directorId } = prevState
-								directorId.push(e.target.value);
-								return ({ directorId: directorId });
-							})
+							this.setState({ directorId: e.target.value })
 						}}
 					>
-						<option>Select author</option>
+						<option>Select Director</option>
 						{this.displayDirectors()}
 					</select>
 				</div>
-				<button>+</button>
+				<div className="field">
+					<label>Actors: </label>
+					{actorInputs}
+					<span onClick={e => this.setState({ actorNo: this.state.actorNo + 1 })}>+</span>
+				</div>
+				<button>Add</button>
 			</form>
 		)
 	}
 }
 
 export default compose(
-	graphql(getDirectorsQuery, { name: "getDirectorsQuery" }),
+	graphql(getDirectorsAndActorsQuery, { name: "getDirectorsAndActorsQuery" }),
 	graphql(addMovieMutation, { name: "addMovieMutation" }),
 )(AddMovie);

@@ -15,16 +15,32 @@ export const getMoviesQuery = gql`
 			name
 			id
 		}
-}
+	}
+`
+
+export const getDirectorsAndActorsQuery = gql`
+	{
+		directors{
+			name
+			id
+		},
+		actors{
+			name
+			id
+		}
+	}
 `
 
 export const getMovieQuery = gql`
 	query($id: ID){
 		movie(id: $id){
+			id
 			name
 			year
-			genre
-			directors{
+			genres{
+				name
+			}
+			director{
 				id
 				name
 				movies{
@@ -32,7 +48,13 @@ export const getMovieQuery = gql`
 					id
 				}
 			}
-			id
+			actors{
+				name
+				movies{
+					id
+					name
+				}
+			}
 		}
 	}
 `

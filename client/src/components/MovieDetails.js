@@ -4,17 +4,18 @@ import { getMovieQuery } from '../queries/queries';
 
 class MovieDetails extends Component {
 
-	displayBookDetails = () => {
+	displayMovieDetails = () => {
 		const { movie } = this.props.data;
+		console.log(movie);
 		if (movie) {
-			const otherMovies = movie.directors[0].movies.map(item => {
+			const otherMovies = movie.director.movies.map(item => {
 				return (<li key={item.id}>{item.name}</li>);
 			});
 			return (
 				<div>
 					<h2>{movie.name}</h2>
 					<p>{movie.genre}</p>
-					<p>{movie.directors[0].name}</p>
+					<p>{movie.director.name}</p>
 					<ul className="other-movies">
 						{otherMovies}
 					</ul>
@@ -22,7 +23,7 @@ class MovieDetails extends Component {
 			)
 		} else {
 			return (
-				<div>No Book Selected</div>
+				<div>No Movie Selected</div>
 			)
 		}
 	}
@@ -30,8 +31,8 @@ class MovieDetails extends Component {
 	render() {
 		console.log(this.props);
 		return (
-			<div id="book-details">
-				{this.displayBookDetails()}
+			<div id="movie-details">
+				{this.displayMovieDetails()}
 			</div>
 		)
 	}
