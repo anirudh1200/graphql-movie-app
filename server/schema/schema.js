@@ -7,23 +7,9 @@ const {
 	GraphQLString,
 	GraphQLSchema,
 	GraphQLID,
-	GraphQLList
+	GraphQLList,
+	GraphQLNonNull
 } = graphql;
-
-// dummy data
-// let movies = [
-// 	{ name: 'Avengers', genre: ' Action | Adventure | Sci-Fi', id: '1', year: '2012', directorId: ['1'] },
-// 	{ name: 'Titanic', genre: 'Drama | Romance', id: '2', year: '1997', directorId: ['2'] },
-// 	{ name: 'Thor: Ragnarok', genre: 'Action | Adventure | Comedy | Fantasy | Sci-Fi', id: '3', year: '2017', directorId: ['3'] },
-// 	{ name: 'Avatar', genre: 'Fantasy | Sci-Fi', id: '4', year: '2009', directorId: ['2'] },
-// 	{ name: 'Green Lantern', genre: 'Action | Adventure | Sci-Fi', id: '5', year: '2011', directorId: ['3'] },
-// ];
-
-// let directors = [
-// 	{ name: 'Joss Whedon', id: '1' },
-// 	{ name: 'James Cameron', id: '2' },
-// 	{ name: 'Taika Waititi', id: '3' },
-// ];
 
 const MovieType = new GraphQLObjectType({
 	name: 'Movie',
@@ -105,7 +91,7 @@ const Mutation = new GraphQLObjectType({
 		addDirector: {
 			type: DirectorType,
 			args: {
-				name: { type: GraphQLString },
+				name: { type: new GraphQLNonNull(GraphQLString) },
 			},
 			resolve(parent, args) {
 				let director = new Director({
@@ -117,10 +103,10 @@ const Mutation = new GraphQLObjectType({
 		addMovie: {
 			type: MovieType,
 			args: {
-				name: { type: GraphQLString },
-				genre: { type: GraphQLString },
-				year: { type: GraphQLString },
-				directorId: { type: new GraphQLList(GraphQLString) }
+				name: { type: new GraphQLNonNull(GraphQLString) },
+				genre: { type: new GraphQLNonNull(GraphQLString) },
+				year: { type: new GraphQLNonNull(GraphQLString) },
+				directorId: { type: new GraphQLNonNull(new GraphQLList(GraphQLString)) }
 			},
 			resolve(parent, args) {
 				let movie = new Movie({
