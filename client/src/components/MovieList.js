@@ -12,7 +12,7 @@ class MovieList extends Component {
 	displayMovies = () => {
 		let { data } = this.props;
 		if (data.loading) {
-			return (<div>Loading books...</div>);
+			return (<div>Loading movies...</div>);
 		} else {
 			return data.movies.map(movie => {
 				return (

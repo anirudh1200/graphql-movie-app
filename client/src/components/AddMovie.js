@@ -126,6 +126,11 @@ class AddMovie extends Component {
 					<span onClick={e => this.setState({ genreNo: this.state.genreNo + 1 })}>+</span>
 				</div>
 				<div className="field">
+					<label>Actors: </label>
+					{actorInputs}
+					<span onClick={e => this.setState({ actorNo: this.state.actorNo + 1 })}>+</span>
+				</div>
+				<div className="field">
 					<label>Director: </label>
 					<select
 						onChange={e => {
@@ -137,12 +142,7 @@ class AddMovie extends Component {
 						{this.displayDirectors()}
 					</select>
 				</div>
-				<div className="field">
-					<label>Actors: </label>
-					{actorInputs}
-					<span onClick={e => this.setState({ actorNo: this.state.actorNo + 1 })}>+</span>
-				</div>
-				<button>Add</button>
+				<button>+</button>
 			</form>
 		)
 	}

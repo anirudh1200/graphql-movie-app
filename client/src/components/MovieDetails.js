@@ -11,13 +11,27 @@ class MovieDetails extends Component {
 			const otherMovies = movie.director.movies.map(item => {
 				return (<li key={item.id}>{item.name}</li>);
 			});
+			const allGenres = movie.genres.map((item, i) => {
+				return (<li key={i}>{item.name}</li>);
+			});
+			const allActors = movie.actors.map((item, i) => {
+				return (<li key={i}>{item.name}</li>)
+			})
 			return (
 				<div>
 					<h2>{movie.name}</h2>
-					<p>{movie.genre}</p>
-					<p>{movie.director.name}</p>
+					<p>Year: {movie.year}</p>
+					<p>Genres: {movie.genre}</p>
+					<ul className="other-movies">
+						{allGenres}
+					</ul>
+					<p>Director: {movie.director.name}</p>
 					<ul className="other-movies">
 						{otherMovies}
+					</ul>
+					<p>Actors: </p>
+					<ul className="other-movies">
+						{allActors}
 					</ul>
 				</div>
 			)

@@ -8,3 +8,21 @@ export const addMovieMutation = gql`
 		}
 	}
 `
+
+export const addActorMutation = gql`
+	mutation($name: String!){
+		addActor(name: $name){
+			name
+			id
+		}
+	}
+`
+
+export const addDirectorMutation = gql`
+	mutation($name: String!){
+		addDirector(name: name){
+			name
+			id
+		}
+	}
+`
