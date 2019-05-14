@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
-import { gql } from 'apollo-boost';
 import { graphql } from 'react-apollo';
-
-const getBooksQuery = gql`
-	{
-		movies{
-			name
-			id
-		}
-	}
-`
+import { getMoviesQuery } from '../queries/queries';
+import MovieDetails from './MovieDetails';
 
 class MovieList extends Component {
+
+	state = {
+		selected: null,
+	}
+
 	displayMovies = () => {
 		let { data } = this.props;
 		if (data.loading) {
@@ -19,21 +16,31 @@ class MovieList extends Component {
 		} else {
 			return data.movies.map(movie => {
 				return (
-					<li key={movie.id}>{movie.name }</li>
+					<li
+						key={movie.id}
+						onClick={() => {
+							this.setState({ selected: movie.id })
+						}}
+					>
+						{movie.name}
+					</li>
 				)
 			})
 		}
 	}
+
 	render() {
-		console.log(this.props);
 		return (
 			<div>
 				<ul id="movie-list">
 					{this.displayMovies()}
 				</ul>
+				<MovieDetails
+					movieId={this.state.selected}
+				/>
 			</div>
 		)
 	}
 }
 
-export default graphql(getBooksQuery)(MovieList);
+export default graphql(getMoviesQuery)(MovieList);
